@@ -1,6 +1,7 @@
 package com.maveric.authenticationauthorizationservice.configuration;
 
 import com.maveric.authenticationauthorizationservice.feignclient.UserFeignService;
+import com.maveric.authenticationauthorizationservice.filter.JwtRequestFilter;
 import com.maveric.authenticationauthorizationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,10 +25,14 @@ public class AuthSecurityConfig {
     @Autowired
     UserService userService;
 
+    @Autowired
+    JwtRequestFilter jwtRequestFilter;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserService();
     }
+
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -59,7 +65,8 @@ public class AuthSecurityConfig {
                 .antMatchers("/error").permitAll();
         http
                 .authorizeRequests()
-                .antMatchers("/auth/login/**", "/api/token/refresh/**").permitAll();
+                .antMatchers("/api/v1/auth/login/**").permitAll();
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeRequests()
                 .anyRequest().authenticated();

@@ -6,22 +6,28 @@ import com.maveric.authenticationauthorizationservice.model.AuthRequest;
 import com.maveric.authenticationauthorizationservice.model.AuthResponse;
 import com.maveric.authenticationauthorizationservice.model.User;
 import com.maveric.authenticationauthorizationservice.service.JWTService;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1")
 public class AuthController {
 
     @Autowired
@@ -54,6 +60,24 @@ public class AuthController {
         AuthResponse authResponse = getAuthResponse(jwt , user);
 
         return ResponseEntity.status(HttpStatus.OK).body(authResponse);
+    }
+
+    @GetMapping("/auth/validateToken")
+    public ResponseEntity<ConnValidationResponse> validateGet(HttpServletRequest request) {
+        String email = (String) request.getAttribute("username");
+        return ResponseEntity.ok(ConnValidationResponse.builder().status("OK").methodType(HttpMethod.GET.name())
+                .email(email)
+                .isAuthenticated(true).build());
+    }
+
+    @Getter
+    @Builder
+    @ToString
+    public static class ConnValidationResponse {
+        private String status;
+        private boolean isAuthenticated;
+        private String methodType;
+        private String email;
     }
 
 
