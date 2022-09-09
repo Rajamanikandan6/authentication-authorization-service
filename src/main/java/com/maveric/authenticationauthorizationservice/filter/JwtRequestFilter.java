@@ -1,10 +1,12 @@
 package com.maveric.authenticationauthorizationservice.filter;
 
+import com.maveric.authenticationauthorizationservice.feignclient.UserFeignService;
 import com.maveric.authenticationauthorizationservice.model.User;
 import com.maveric.authenticationauthorizationservice.service.JWTService;
 import com.maveric.authenticationauthorizationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +30,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserFeignService userFeignService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authoriazationHeader = request.getHeader("Authorization");
@@ -42,7 +47,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if (emailId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userService.loadUserByUsername(emailId);
                 if (jwtService.validateToken(jwt, userDetails)) {
-                    request.setAttribute("username", userDetails.getUsername());
+                    ResponseEntity<User> objectResponseEntity = userFeignService.getUserByEmail(emailId);
+                    User getUserIdFromUser = objectResponseEntity.getBody();
+                    request.setAttribute("userId", getUserIdFromUser.getId());
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

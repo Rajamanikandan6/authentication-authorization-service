@@ -64,9 +64,9 @@ public class AuthController {
 
     @GetMapping("/auth/validateToken")
     public ResponseEntity<ConnValidationResponse> validateGet(HttpServletRequest request) {
-        String email = (String) request.getAttribute("username");
+        String userId = (String) request.getAttribute("userId");
         return ResponseEntity.ok(ConnValidationResponse.builder().status("OK").methodType(HttpMethod.GET.name())
-                .email(email)
+                .userId(userId)
                 .isAuthenticated(true).build());
     }
 
@@ -77,7 +77,7 @@ public class AuthController {
         private String status;
         private boolean isAuthenticated;
         private String methodType;
-        private String email;
+        private String userId;
     }
 
 
