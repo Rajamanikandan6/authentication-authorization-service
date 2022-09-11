@@ -23,6 +23,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,9 @@ public class AuthController {
 
         }catch (BadCredentialsException badCredentialsException){
            throw new Exception("Incorrect email or password",badCredentialsException);
+        }
+        catch (Exception ex){
+            throw new Exception("Incorrect email or password");
         }
 
         ResponseEntity<User> objectResponseEntity = userFeignService.getUserByEmail(authRequest.getEmail());
