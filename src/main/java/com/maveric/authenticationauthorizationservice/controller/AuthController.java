@@ -1,6 +1,7 @@
 package com.maveric.authenticationauthorizationservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maveric.authenticationauthorizationservice.constant.ErrorMessageConstant;
 import com.maveric.authenticationauthorizationservice.feignclient.UserFeignService;
 import com.maveric.authenticationauthorizationservice.model.AuthRequest;
 import com.maveric.authenticationauthorizationservice.model.AuthResponse;
@@ -50,10 +51,10 @@ public class AuthController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(),authRequest.getPassword()));
 
         }catch (BadCredentialsException badCredentialsException){
-           throw new Exception("Incorrect email or password",badCredentialsException);
+           throw new Exception(ErrorMessageConstant.EMAIL_PASSWORD_ERROR,badCredentialsException);
         }
         catch (Exception ex){
-            throw new Exception("Incorrect email or password");
+            throw new Exception(ErrorMessageConstant.EMAIL_PASSWORD_ERROR);
         }
 
         ResponseEntity<User> objectResponseEntity = userFeignService.getUserByEmail(authRequest.getEmail());

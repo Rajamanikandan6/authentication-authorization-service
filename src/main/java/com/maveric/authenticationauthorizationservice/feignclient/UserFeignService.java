@@ -3,7 +3,6 @@ package com.maveric.authenticationauthorizationservice.feignclient;
 import com.maveric.authenticationauthorizationservice.model.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 

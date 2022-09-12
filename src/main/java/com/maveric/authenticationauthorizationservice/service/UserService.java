@@ -1,6 +1,5 @@
 package com.maveric.authenticationauthorizationservice.service;
 
-import com.maveric.authenticationauthorizationservice.dto.UserDto;
 import com.maveric.authenticationauthorizationservice.feignclient.UserFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
