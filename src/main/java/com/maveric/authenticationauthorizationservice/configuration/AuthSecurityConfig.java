@@ -65,7 +65,7 @@ public class AuthSecurityConfig {
                 .antMatchers("/error").permitAll();
         http
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/login/**").permitAll();
+                .antMatchers("/api/v1/auth/login/**","http://localhost:8000/api/v1/auth/login/**").permitAll();
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeRequests()
