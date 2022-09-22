@@ -1,9 +1,9 @@
 package com.maveric.authenticationauthorizationservice.configuration;
 
-import com.maveric.authenticationauthorizationservice.constant.ErrorMessageConstant;
 import com.maveric.authenticationauthorizationservice.filter.JwtRequestFilter;
 import com.maveric.authenticationauthorizationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,8 +24,14 @@ public class AuthSecurityConfig {
     @Autowired
     UserService userService;
 
-    @Autowired
-    JwtRequestFilter jwtRequestFilter;
+    @Value("${app.auth-login}")
+    private String authUrl ;
+
+    @Value("${app.auth-login-v1}")
+    private String authLoginUrl ;
+
+    @Value("${app.auth-signup}")
+    private String authSignupUrl ;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -53,7 +59,7 @@ public class AuthSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtRequestFilter jwtRequestFilter) throws Exception {
         http
                 .csrf().disable();
         http
@@ -61,10 +67,10 @@ public class AuthSecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .authorizeRequests()
-                .antMatchers(ErrorMessageConstant.ERROR_URL).permitAll();
+                .antMatchers("/error").permitAll();
         http
                 .authorizeRequests()
-                .antMatchers(ErrorMessageConstant.AUTH_URL,ErrorMessageConstant.AUTH_URL_V1).permitAll();
+                .antMatchers(authUrl,authLoginUrl,authSignupUrl).permitAll();
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeRequests()

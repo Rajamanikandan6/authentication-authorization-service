@@ -15,7 +15,7 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    private String SECRET_KEY = "secret";
+    private final String SECRET_KEY = "secret";
 
     public String getUserEmail(String token){
         return getClaim(token,Claims::getSubject);

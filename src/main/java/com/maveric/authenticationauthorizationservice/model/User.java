@@ -28,8 +28,6 @@ public class User implements UserDetails {
 
     private Gender gender;
 
-    private String role;
-
     private String password;
 
     @Override

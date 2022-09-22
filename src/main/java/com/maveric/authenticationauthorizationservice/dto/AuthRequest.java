@@ -1,4 +1,4 @@
-package com.maveric.authenticationauthorizationservice.model;
+package com.maveric.authenticationauthorizationservice.dto;
 
 import lombok.Data;
 
