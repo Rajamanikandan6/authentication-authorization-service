@@ -1,6 +1,7 @@
 package com.maveric.authenticationauthorizationservice.feignclient;
 
 import com.maveric.authenticationauthorizationservice.model.User;
+import feign.FeignException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

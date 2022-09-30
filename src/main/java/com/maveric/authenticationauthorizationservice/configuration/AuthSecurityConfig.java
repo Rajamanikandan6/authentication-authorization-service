@@ -1,7 +1,9 @@
 package com.maveric.authenticationauthorizationservice.configuration;
 
+import com.maveric.authenticationauthorizationservice.feignclient.FeignCustomErrorDecoder;
 import com.maveric.authenticationauthorizationservice.filter.JwtRequestFilter;
 import com.maveric.authenticationauthorizationservice.service.UserService;
+import feign.codec.ErrorDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

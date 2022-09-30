@@ -2,6 +2,7 @@ package com.maveric.authenticationauthorizationservice.exception;
 
 import com.maveric.authenticationauthorizationservice.constant.ErrorMessageConstant;
 import com.maveric.authenticationauthorizationservice.dto.Error;
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,7 +15,13 @@ import org.springframework.web.client.HttpServerErrorException;
 public class GlobalExceptionAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Error> internalServerError(Exception exception){
-        Error error = getError(exception.getMessage(), String.valueOf(HttpStatus.BAD_REQUEST));
+        Error error = getError(exception.getLocalizedMessage(), String.valueOf(HttpStatus.BAD_REQUEST));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<Error> feignExceptionError(FeignException exception){
+        Error error = getError(exception.getLocalizedMessage(), String.valueOf(HttpStatus.BAD_REQUEST.value()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
