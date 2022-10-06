@@ -15,13 +15,13 @@ import org.springframework.web.client.HttpServerErrorException;
 public class GlobalExceptionAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Error> internalServerError(Exception exception){
-        Error error = getError(exception.getLocalizedMessage(), String.valueOf(HttpStatus.BAD_REQUEST));
+        Error error = getError(exception.getMessage(), String.valueOf(HttpStatus.BAD_REQUEST));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<Error> feignExceptionError(FeignException exception){
-        Error error = getError(exception.getLocalizedMessage(), String.valueOf(HttpStatus.BAD_REQUEST.value()));
+        Error error = getError(exception.getMessage(), String.valueOf(HttpStatus.BAD_REQUEST));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -41,6 +41,12 @@ public class GlobalExceptionAdvice {
     public ResponseEntity<Error>  serviceUnavailable(HttpServerErrorException.ServiceUnavailable serviceUnavailable){
         Error error = getError(String.valueOf(serviceUnavailable.getMessage()),String.valueOf(HttpStatus.SERVICE_UNAVAILABLE));
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
+    }
+
+    @ExceptionHandler(UserFeignException.class)
+    public ResponseEntity<Error> handleUserFeignException(UserFeignException userFeignException){
+        Error error = getError(userFeignException.getMessage(),String.valueOf(HttpStatus.BAD_REQUEST));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     private Error getError(String message , String code){

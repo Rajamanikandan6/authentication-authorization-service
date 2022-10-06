@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(value = "feignUser",url = "http://localhost:3005/api/v1")
+@FeignClient(value = "feignUser",url = "http://localhost:3005/api/v1",configuration = FeignCustomErrorDecoder.class)
 public interface UserFeignService {
 
     @GetMapping("/users/getUserByEmail/{emailId}")
